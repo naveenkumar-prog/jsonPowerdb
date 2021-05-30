@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>L2E Mini Project</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js"></script>
+
+    </head>
+    <body>
+    <center><h1>Update Data</h1></center>
+    <center><input id="empId" maxlength="50" placeholder="Emp Id" name="rollno" type="text" /><br><br>
+        <p>You can change your password only.</p>
+        <input id="password" maxlength="50" placeholder="Password" name="password" type="password" /><br><br>
+        <input type="button" value="UPDATE DATA" onclick="updateData();"/></center>
+    <p id="show"></p>
+    <center>
+                
+                <p>Try Remaining CRUD operations.</p>
+                <a href="put.html">To Insert Data</a> <br><br>
+                <a href="retrive.html">To Retrieve Data</a><br><br>
+                <a href="delete.html">To Delete Data</a>
+            </center>
+
+    
+    <script>
+        function executeCommand(reqString, dbBaseUrl, apiEndPointUrl) {
+            var url = dbBaseUrl + apiEndPointUrl;
+            var jsonObj;
+            $.post(url, reqString, function (result) {
+                jsonObj = JSON.parse(result);
+            }).fail(function (result) {
+                var dataJsonObj = result.responseText;
+                jsonObj = JSON.parse(dataJsonObj);
+            });
+            return jsonObj;
+        }
+        
+         function resetForm() {
+                $("#empId").val("")
+                $("#password").val("");            
+                $("#empId").focus();
+            }
+        
+        function updateData(){
+            var token = "90935612|-31948840111820965|90933296";
+            var dbname = "FACTORY";
+            var relationName = "EMP-REL";
+            var roll = parseInt(document.getElementById("empId").value);
+            var password = document.getElementById("password").value;
+            
+            var jsonObj = {
+                Password : password,
+            };
+            var reqString = createUPDATERecordRequest(token, JSON.stringify(jsonObj), dbname, relationName, roll);
+            alert(reqString);
+            jQuery.ajaxSetup({async: false});
+            var resultObj = executeCommand(reqString,
+                    "http://api.login2explore.com:5577", "/api/iml");
+            jQuery.ajaxSetup({async: true});
+            alert(JSON.stringify(resultObj));
+            resetForm();
+            
+        }
+    </script>
+    </body>
+</html>
